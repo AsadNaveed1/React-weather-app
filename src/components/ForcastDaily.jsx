@@ -1,7 +1,7 @@
 import React from 'react'
 
 
-function Forcast(props) {
+function ForcastDaily(props) {
   return (
     <div>
 
@@ -18,15 +18,23 @@ function Forcast(props) {
 
         <div className='flex flex-col items-center justify-center'>
             <p className='font-light text-sm'>
-                04:30 PM
+                Wed
             </p>
             <img src="https://openweathermap.org/img/wn/01d@2x.png" alt="" className='w-12 my-1'/>
-            <p className='font-medium'>22°</p>
+            <p className='font-medium'>26°</p>
         </div>
 
         <div className='flex flex-col items-center justify-center'>
             <p className='font-light text-sm'>
-                05:30 PM
+                Thu
+            </p>
+            <img src="https://openweathermap.org/img/wn/01d@2x.png" alt="" className='w-12 my-1'/>
+            <p className='font-medium'>30°</p>
+        </div>
+
+        <div className='flex flex-col items-center justify-center'>
+            <p className='font-light text-sm'>
+                Fri
             </p>
             <img src="https://openweathermap.org/img/wn/01d@2x.png" alt="" className='w-12 my-1'/>
             <p className='font-medium'>25°</p>
@@ -34,15 +42,7 @@ function Forcast(props) {
 
         <div className='flex flex-col items-center justify-center'>
             <p className='font-light text-sm'>
-                06:30 PM
-            </p>
-            <img src="https://openweathermap.org/img/wn/01d@2x.png" alt="" className='w-12 my-1'/>
-            <p className='font-medium'>23°</p>
-        </div>
-
-        <div className='flex flex-col items-center justify-center'>
-            <p className='font-light text-sm'>
-                07:30 PM
+                Sat
             </p>
             <img src="https://openweathermap.org/img/wn/01d@2x.png" alt="" className='w-12 my-1'/>
             <p className='font-medium'>29°</p>
@@ -50,10 +50,10 @@ function Forcast(props) {
 
         <div className='flex flex-col items-center justify-center'>
             <p className='font-light text-sm'>
-                08:30 PM
+                Sun
             </p>
             <img src="https://openweathermap.org/img/wn/01d@2x.png" alt="" className='w-12 my-1'/>
-            <p className='font-medium'>30°</p>
+            <p className='font-medium'>32°</p>
         </div>
 
 
@@ -67,4 +67,4 @@ function Forcast(props) {
   )
 }
 
-export default Forcast
+export default ForcastDaily

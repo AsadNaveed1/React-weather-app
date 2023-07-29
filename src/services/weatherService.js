@@ -37,20 +37,38 @@ const getWeatherData = (infoType, searchParams) =>
 // weather is an array that contains an object so we take info from that differently
 // to change the variable name we do => main: details
 const formatCurrentWeather = (data) => {
-    const {
-      coord: { lat, lon },
-      main: { temp, feels_like, temp_min, temp_max, humidity },
-      name,
-      dt,
-      sys: { country, sunrise, sunset },
-      weather,
-      wind: { speed },
-    } = data;
-  
-    const { main: details, icon } = weather[0];
-  
-    return { lat, lon, temp, feels_like, temp_min, temp_max, humidity, name, dt, country, sunrise, sunset, details, icon, speed,};
+  const {
+    coord: { lat, lon },
+    main: { temp, feels_like, temp_min, temp_max, humidity },
+    name,
+    dt,
+    sys: { country, sunrise, sunset },
+    weather,
+    timezone,
+    wind: { speed },
+  } = data;
+
+  const { main: details, icon } = weather[0];
+
+  return {
+    lat,
+    lon,
+    temp,
+    feels_like,
+    temp_min,
+    temp_max,
+    humidity,
+    name,
+    dt,
+    country,
+    sunrise,
+    sunset,
+    details,
+    icon,
+    speed,
+    timezone
   };
+};
 
 
   //in this function we get the weatherdata using params and call the formatcurrentweather function
@@ -137,18 +155,19 @@ const getFormattedWeatherData = async (searchParams) => {
       "weather",searchParams).then(formatCurrentWeather);
     
 
-    const { lat, lon } = formattedCurrentWeather;
+    // const { lat, lon } = formattedCurrentWeather;
 
-    const formattedForecastWeather = await getWeatherData("onecall", {
-      lat,
-      lon,
-      exclude: "current,minutely,alerts",
-      units: searchParams.units,
-    }).then(formatForecastWeather);
+    // const formattedForecastWeather = await getWeatherData("onecall", {
+    //   lat,
+    //   lon,
+    //   exclude: "current,minutely,alerts",
+    //   units: searchParams.units,
+    // }).then(formatForecastWeather);
 
-    return { formattedCurrentWeather, formattedForecastWeather };
+    return { ...formattedCurrentWeather };
 
-}   
+}  
+//Spread syntax(...) allows you to deconstruct an array or object into separate variables. 
 
 const formatToLocalTime = (
   secs,
@@ -156,4 +175,9 @@ const formatToLocalTime = (
   format = "cccc, dd LLL yyyy' | Local time: 'hh:mm a"
 ) => DateTime.fromSeconds(secs).setZone(zone).toFormat(format);
 
+const iconUrlFromCode = (code) =>
+  `http://openweathermap.org/img/wn/${code}@2x.png`;
+
 export default getFormattedWeatherData
+
+export { formatToLocalTime, iconUrlFromCode };
