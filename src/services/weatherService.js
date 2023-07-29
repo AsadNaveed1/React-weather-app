@@ -1,3 +1,5 @@
+import { DateTime } from "luxon";
+
 const API_KEY = 'd94d149fa52c798d642dffbef8556091';
 const BASE_URL = 'https://api.openweathermap.org/data/2.5';
 
@@ -30,6 +32,10 @@ const getWeatherData = (infoType, searchParams) =>
 // fetch() method that provides an easy, logical way to fetch resources asynchronously across the network.
 
 
+// now in this function we take out all the necessary info that we need from the data we are getting from the api
+//this is call destructuring  now the data is containing a lot of objects so t get stuf from each of that object we do like this
+// weather is an array that contains an object so we take info from that differently
+// to change the variable name we do => main: details
 const formatCurrentWeather = (data) => {
     const {
       coord: { lat, lon },
@@ -46,11 +52,108 @@ const formatCurrentWeather = (data) => {
     return { lat, lon, temp, feels_like, temp_min, temp_max, humidity, name, dt, country, sunrise, sunset, details, icon, speed,};
   };
 
+
+  //in this function we get the weatherdata using params and call the formatcurrentweather function
+  //getformattedweatherdata returns the variable formatedcurrentweather which has
+  /**   
+ country
+: 
+"GB"
+details
+: 
+"Clouds"
+dt
+: 
+1690465574
+feels_like
+: 
+294.81
+humidity
+: 
+82
+icon
+: 
+"04d"
+lat
+: 
+51.5085
+lon
+: 
+-0.1257
+name
+: 
+"London"
+speed
+: 
+5.66
+sunrise
+: 
+1690431369
+sunset
+: 
+1690487857
+temp
+: 
+294.48
+temp_max
+: 
+296.07
+temp_min
+: 
+291.51
+*/
+
+
+
+const formatForecastWeather = (data) => {
+  let { timezone, daily, hourly } = data;
+  daily = daily.slice(1, 6).map((d) => {
+    return {
+      title: formatToLocalTime(d.dt, timezone, "ccc"),
+      temp: d.temp.day,
+      icon: d.weather[0].icon,
+    };
+  });
+
+  hourly = hourly.slice(1, 6).map((d) => {
+    return {
+      title: formatToLocalTime(d.dt, timezone, "hh:mm a"),
+      temp: d.temp,
+      icon: d.weather[0].icon,
+    };
+  });
+
+  return { timezone, daily, hourly };
+};
+
+
+
+//ok so in the following function we have 2 variables formattedcurrentweather and formattedforcastweather
+//formattedcurrentweather gives us all the info we need for thr current day
+//formattedforcastweather gives us all the info we need for the future days
+// for formattedforcastweather we first get the lat and long from the formattedcurrentweather data and pass it as param in getweatherdata function along with the units which we get from searchparams.unit (e.g london.unit)
 const getFormattedWeatherData = async (searchParams) => {
     const formattedCurrentWeather = await getWeatherData(
       "weather",searchParams).then(formatCurrentWeather);
     
-    return formattedCurrentWeather;
+
+    const { lat, lon } = formattedCurrentWeather;
+
+    const formattedForecastWeather = await getWeatherData("onecall", {
+      lat,
+      lon,
+      exclude: "current,minutely,alerts",
+      units: searchParams.units,
+    }).then(formatForecastWeather);
+
+    return { formattedCurrentWeather, formattedForecastWeather };
+
 }   
+
+const formatToLocalTime = (
+  secs,
+  zone,
+  format = "cccc, dd LLL yyyy' | Local time: 'hh:mm a"
+) => DateTime.fromSeconds(secs).setZone(zone).toFormat(format);
 
 export default getFormattedWeatherData
